@@ -20,6 +20,7 @@ El flujo de procesamiento sigue la arquitectura Medallion tal cual fue solicitad
 ## Orquestación del Pipeline
 
 La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data Factory a través del pipeline `PL_retailmax_medallion`:
+
 ### 🔄 Ejecución del Pipeline Maestro (DAG)
 
 ![Orquestación del Pipeline Medallion](docs/dag_execution.png)
