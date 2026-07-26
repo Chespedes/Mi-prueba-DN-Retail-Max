@@ -26,6 +26,10 @@ La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data 
 * **Actividad 3 (`Notebook`):** Genera la capa analítica Gold (`03_Gold_processing`) con las métricas RFM.
 
 > *La evidencia gráfica del pipeline ejecutado con éxito se encuentra documentada en la carpeta `/docs`.*
+## Modelo RFM y Reglas de Negocio
+* **Recency:** Días transcurridos desde la última transacción del cliente.
+* **Frequency:** Cantidad total de transacciones completadas por el cliente.
+* **Monetary (`monetary_val`):** Monto acumulado total de ventas generadas.
 
 ##  Casos de Uso y Necesidades del Negocio Resueltas
 
@@ -42,7 +46,4 @@ La arquitectura Medallion implementada, específicamente en la **Capa Gold**, fu
 5. **Dashboard Ejecutivo Comercial:** 
    * *Solución:* Consolidación del Star Schema (Ventas + Dimensiones conformadas) listo para ser conectado en modo DirectLake / Import a Power BI, entregando la vista diaria por país, tienda, canal y categoría.
 
-## Modelo RFM y Reglas de Negocio
-* **Recency:** Días transcurridos desde la última transacción del cliente.
-* **Frequency:** Cantidad total de transacciones completadas por el cliente.
-* **Monetary (`monetary_val`):** Monto acumulado total de ventas generadas.
+
