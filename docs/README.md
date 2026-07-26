@@ -1,4 +1,4 @@
-# 📐 Modelo Entidad-Relación (MER) - RetailMax
+# Modelo Entidad-Relación (MER) - RetailMax
 
 ## Modelo Dimensional (Capa Gold)
 
