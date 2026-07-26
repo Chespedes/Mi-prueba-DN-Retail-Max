@@ -12,8 +12,9 @@
 El flujo de procesamiento sigue la arquitectura Medallion tal cual fue solicitada y  para garantizar calidad, trazabilidad y rendimiento en el Data Lakehouse:
 
 1. **Bronze (Data Cruda):** Ingesta directa de las tablas transaccionales desde el origen SQL Server mediante pipeline sin transformaciones.
-2. **Silver (Zona de limpieza):** Limpieza de datos, estandarización de tipos, deduplicación, manejo de valores nulos y generación de llaves subrogadas (`sk_cliente`, `sk_producto`).
-3. **Gold (Zona final):** Modelado multidimensional enfocado en el análisis RFM (Recency, Frequency, Monetary) para segmentación de clientes y cálculo de alertas de negocio.
+   **Nota de Ingesta:** La extracción de la base de datos origen hacia `LH_Bronze` se orquestó mediante un Data Pipeline de Microsoft Fabric. El script `01_bronze_ingestion.py` documenta la estructura lógica de la ingesta en formato Delta Lake.
+3. **Silver (Zona de limpieza):** Limpieza de datos, estandarización de tipos, deduplicación, manejo de valores nulos y generación de llaves subrogadas (`sk_cliente`, `sk_producto`).
+4. **Gold (Zona final):** Modelado multidimensional enfocado en el análisis RFM (Recency, Frequency, Monetary) para segmentación de clientes y cálculo de alertas de negocio.
 
 ---
 
