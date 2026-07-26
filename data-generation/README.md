@@ -1,1 +1,1 @@
-
+> **Nota de ejecución:** La generación de datos se dividió en dos scripts secuenciales (`01_generate_master_data.py` y `02_generate_transactional_data.py`) para optimizar el consumo de memoria y la tasa de ingesta hacia la base de datos SQL de Microsoft Fabric.
