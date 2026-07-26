@@ -27,7 +27,20 @@ La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data 
 
 > *La evidencia gráfica del pipeline ejecutado con éxito se encuentra documentada en la carpeta `/docs`.*
 
----
+##  Casos de Uso y Necesidades del Negocio Resueltas
+
+La arquitectura Medallion implementada, específicamente en la **Capa Gold**, fue modelada para dar respuesta directa a las necesidades analíticas de RetailMax:
+
+1. **Prevención de Quiebre de Stock:** 
+   * *Solución:* Implementación de `FACT_INVENTARIO` para cruzar el stock actual con la velocidad de consumo y tiempos de reabastecimiento, permitiendo alertas tempranas a 7 días.
+2. **Segmentación de Clientes (Modelo RFM):** 
+   * *Solución:* Construcción de la tabla `METRICAS_RFM` que calcula el Recency, Frequency y Monetary value, permitiendo agrupar a los clientes de fidelización en 5+ segmentos de valor.
+3. **Análisis de Conversión y Ticket Promedio:** 
+   * *Solución:* Uso de `FACT_VENTAS` cruzada con la dimensión de canales y categorías para obtener la tasa de conversión y el ticket promedio.
+4. **Mitigación de Devoluciones:** 
+   * *Solución:* Integración de `FACT_DEVOLUCIONES` para identificar patrones de causa raíz por motivo, categoría, proveedor y canal.
+5. **Dashboard Ejecutivo Comercial:** 
+   * *Solución:* Consolidación del Star Schema (Ventas + Dimensiones conformadas) listo para ser conectado en modo DirectLake / Import a Power BI, entregando la vista diaria por país, tienda, canal y categoría.
 
 ## Modelo RFM y Reglas de Negocio
 * **Recency:** Días transcurridos desde la última transacción del cliente.
