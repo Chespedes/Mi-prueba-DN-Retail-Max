@@ -20,6 +20,9 @@ El flujo de procesamiento sigue la arquitectura Medallion tal cual fue solicitad
 ## Orquestación del Pipeline
 
 La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data Factory a través del pipeline `PL_retailmax_medallion`:
+### 🔄 Ejecución del Pipeline Maestro (DAG)
+
+![Orquestación del Pipeline Medallion](docs/dag_execution.png)
 
 * **Actividad 1 (`Invoke Pipeline`):** Desencadena el pipeline `Ext_Sqlsrvr_Bronze` para la ingesta del origen.
 * **Actividad 2 (`Notebook`):** Procesa las reglas de transformación hacia la capa Silver (`02_Silver_processing`).
@@ -30,6 +33,8 @@ La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data 
 * **Recency:** Días transcurridos desde la última transacción del cliente.
 * **Frequency:** Cantidad total de transacciones completadas por el cliente.
 * **Monetary (`monetary_val`):** Monto acumulado total de ventas generadas.
+
+  
 
 ##  Casos de Uso y Necesidades del Negocio Resueltas
 
