@@ -23,7 +23,7 @@ La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data 
 
 ###  Ejecución del Pipeline Maestro (DAG)
 
-![Orquestación del Pipeline Medallion](docs/Dag Medallion.png)
+![Orquestación del Pipeline Medallion](docs/Dag_Medallion.png)
 
 * **Actividad 1 (`Invoke Pipeline`):** Desencadena el pipeline `Ext_Sqlsrvr_Bronze` para la ingesta del origen.
 * **Actividad 2 (`Notebook`):** Procesa las reglas de transformación hacia la capa Silver (`02_Silver_processing`).
