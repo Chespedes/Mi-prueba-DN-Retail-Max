@@ -27,7 +27,7 @@ Se estructuró y pobló el modelo (`ver carpeta data-generation, archivos .py`) 
 
 ## Orquestación del Pipeline
 
-La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data Factory a través del pipeline `PL_retailmax_medallion`:
+La orquestación de extremo a extremo se realiza mediante Microsoft Fabric Data Factory a través del pipeline `PL_retailmax_medallion` , el JSON del PL se encuentra en orchestration `PL_master.json`:
 
 ###  Ejecución del Pipeline Maestro (DAG)
 
