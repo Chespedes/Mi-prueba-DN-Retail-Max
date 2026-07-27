@@ -1,4 +1,4 @@
-# Catálogo de Datos - RetailMax Analytics
+# Catálogo de Datos - RetailMax
 
 Este documento detalla las principales entidades y campos calculados gestionados en el pipeline analítico de Microsoft Fabric.
 
