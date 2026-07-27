@@ -19,7 +19,7 @@ Se estructuró y pobló el modelo (`ver carpeta data-generation, archivos .py`) 
    **Nota de Ingesta:** La extracción de la base de datos origen hacia `LH_Bronze` se orquestó mediante un Data Pipeline de Microsoft Fabric. El json `01_bronze_pipeline_definitions.json` documenta la estructura lógica de la ingesta en formato Delta Lake.
    
    ![Ingesta Directa Tablas iniciales](docs/Ext_Sqlsrvr_Bronze.png)
-   
+   ![Control versiones](docs/Control_versiones.png)
 3. **Silver (Zona de limpieza):** Limpieza de datos, estandarización de tipos, deduplicación, manejo de valores nulos y generación de llaves subrogadas (`sk_cliente`, `sk_producto`).
 4. **Gold (Zona final):** Modelado multidimensional enfocado en el análisis RFM (Recency, Frequency, Monetary) para segmentación de clientes y cálculo de alertas de negocio.
 
