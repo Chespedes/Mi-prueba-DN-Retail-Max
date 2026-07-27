@@ -1,1 +1,293 @@
-
+{
+    "name": "Ext_Sqlsrvr_Bronze",
+    "objectId": "00000000-0000-0000-0000-000000000001",
+    "properties": {
+        "activities": [
+            {
+                "name": "LK_controlcargas",
+                "type": "Lookup",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DataWarehouseSource",
+                        "sqlReaderQuery": "SELECT \n    PkControlCargas,\n    EsquemaFuente, \n    NombreTablaFuente, \n    ColumnasArchivoFuente, \n    FiltrosArchivoFuente,\n    EsquemaDestino, \n    NombreTablaDestino\nFROM dbo.ControlCargas\nWHERE IndicadorCargaActiva = 1;",
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None"
+                    },
+                    "firstRowOnly": false,
+                    "datasetSettings": {
+                        "annotations": [],
+                        "linkedService": {
+                            "name": "ControlCargas",
+                            "properties": {
+                                "annotations": [],
+                                "type": "DataWarehouse",
+                                "typeProperties": {
+                                    "endpoint": "YOUR_ENDPOINT.datawarehouse.fabric.microsoft.com",
+                                    "artifactId": "00000000-0000-0000-0000-000000000002",
+                                    "workspaceId": "00000000-0000-0000-0000-000000000003"
+                                }
+                            }
+                        },
+                        "type": "DataWarehouseTable",
+                        "schema": [],
+                        "typeProperties": {
+                            "schema": "dbo",
+                            "table": "ControlCargas"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "ForEach_IterarTablas",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "LK_controlcargas",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('LK_controlcargas').output.value",
+                        "type": "Expression"
+                    },
+                    "isSequential": true,
+                    "activities": [
+                        {
+                            "name": "Copy_fuente_a_bronze",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "FabricSqlDatabaseSource",
+                                    "sqlReaderQuery": {
+                                        "value": "@concat('SELECT ', item().ColumnasArchivoFuente, ', GETDATE() AS FechaIngesta, ''SQL_ORIGEN'' AS SistemaFuente, ''', pipeline().RunId, ''' AS IdLote FROM ', item().EsquemaFuente, '.', item().NombreTablaFuente, if(greater(length(coalesce(item().FiltrosArchivoFuente, '')), 0), concat(' WHERE ', item().FiltrosArchivoFuente), ''))",
+                                        "type": "Expression"
+                                    },
+                                    "queryTimeout": "02:00:00",
+                                    "partitionOption": "None",
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "connectionSettings": {
+                                            "name": "Data de negocio",
+                                            "properties": {
+                                                "annotations": [],
+                                                "type": "FabricSqlDatabase",
+                                                "typeProperties": {
+                                                    "workspaceId": "00000000-0000-0000-0000-000000000003",
+                                                    "artifactId": "00000000-0000-0000-0000-000000000004"
+                                                },
+                                                "externalReferences": {
+                                                    "connection": "00000000-0000-0000-0000-000000000005"
+                                                }
+                                            }
+                                        },
+                                        "type": "FabricSqlDatabaseTable",
+                                        "schema": []
+                                    }
+                                },
+                                "sink": {
+                                    "type": "ParquetSink",
+                                    "storeSettings": {
+                                        "type": "LakehouseWriteSettings"
+                                    },
+                                    "formatSettings": {
+                                        "type": "ParquetWriteSettings",
+                                        "enableVertiParquet": true
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "linkedService": {
+                                            "name": "LH_Bronze",
+                                            "properties": {
+                                                "annotations": [],
+                                                "type": "Lakehouse",
+                                                "typeProperties": {
+                                                    "workspaceId": "00000000-0000-0000-0000-000000000003",
+                                                    "artifactId": "00000000-0000-0000-0000-000000000006",
+                                                    "rootFolder": "Files"
+                                                }
+                                            }
+                                        },
+                                        "type": "Parquet",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "LakehouseLocation",
+                                                "fileName": {
+                                                    "value": "@concat(item().NombreTablaDestino, '.parquet')",
+                                                    "type": "Expression"
+                                                },
+                                                "folderPath": {
+                                                    "value": "@concat('raw/', item().NombreTablaDestino, '/', formatDateTime(utcNow(), 'yyyy/MM/dd'))",
+                                                    "type": "Expression"
+                                                }
+                                            },
+                                            "compressionCodec": "snappy"
+                                        },
+                                        "schema": []
+                                    }
+                                },
+                                "enableStaging": false,
+                                "translator": {
+                                    "type": "TabularTranslator",
+                                    "typeConversion": true,
+                                    "typeConversionSettings": {
+                                        "allowDataTruncation": true,
+                                        "treatBooleanAsNumber": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "SP_satisfactorio",
+                            "type": "SqlServerStoredProcedure",
+                            "dependsOn": [
+                                {
+                                    "activity": "Copy_fuente_a_bronze",
+                                    "dependencyConditions": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "storedProcedureName": "[dbo].[SP_SATISFACTORIO]",
+                                "storedProcedureParameters": {
+                                    "ExecutionId": {
+                                        "value": {
+                                            "value": "@pipeline().RunId",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "NombreTablaDestino": {
+                                        "value": {
+                                            "value": "@item().NombreTablaDestino",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "NombreTablaFuente": {
+                                        "value": {
+                                            "value": "@item().NombreTablaFuente",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "RegistrosCopiados": {
+                                        "value": {
+                                            "value": "@activity('Copy_fuente_a_bronze').output.rowsCopied",
+                                            "type": "Expression"
+                                        },
+                                        "type": "Int64"
+                                    }
+                                }
+                            },
+                            "linkedService": {
+                                "name": "ControlCargas",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "DataWarehouse",
+                                    "typeProperties": {
+                                        "endpoint": "YOUR_ENDPOINT.datawarehouse.fabric.microsoft.com",
+                                        "artifactId": "00000000-0000-0000-0000-000000000002",
+                                        "workspaceId": "00000000-0000-0000-0000-000000000003"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "SP_Falla",
+                            "type": "SqlServerStoredProcedure",
+                            "dependsOn": [
+                                {
+                                    "activity": "Copy_fuente_a_bronze",
+                                    "dependencyConditions": [
+                                        "Failed"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "storedProcedureName": "[dbo].[SP_FALLA]",
+                                "storedProcedureParameters": {
+                                    "ExecutionId": {
+                                        "value": {
+                                            "value": "@pipeline().RunId",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "MensajeError": {
+                                        "value": {
+                                            "value": "@activity('Copy_fuente_a_bronze').error.message",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "NombreTablaDestino": {
+                                        "value": {
+                                            "value": "@item().NombreTablaDestino",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    },
+                                    "NombreTablaFuente": {
+                                        "value": {
+                                            "value": "@item().NombreTablaFuente",
+                                            "type": "Expression"
+                                        },
+                                        "type": "String"
+                                    }
+                                }
+                            },
+                            "linkedService": {
+                                "name": "ControlCargas",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "DataWarehouse",
+                                    "typeProperties": {
+                                        "endpoint": "YOUR_ENDPOINT.datawarehouse.fabric.microsoft.com",
+                                        "artifactId": "00000000-0000-0000-0000-000000000002",
+                                        "workspaceId": "00000000-0000-0000-0000-000000000003"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "00000000-0000-0000-0000-000000000007",
+        "lastPublishTime": "2026-07-26T06:59:59Z"
+    }
+}
