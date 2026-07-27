@@ -12,7 +12,7 @@
 El flujo de procesamiento sigue la arquitectura Medallion tal cual fue solicitada y  para garantizar calidad, trazabilidad y rendimiento en el Data Lakehouse:
 
 0.** Generación Datos negocio (Datos Dummy):** se implementó la generación de datos dummy para simular el escenario de producción del caso RetailMax.
-Se estructuró y pobló el modelo (`ver carpeta data-generation`) cumpliendo con las volumetrías requeridas (incluyendo 1,000,000 de registros en la tabla de transacciones de ventas).
+Se estructuró y pobló el modelo (`ver carpeta data-generation, archivos .py`) cumpliendo con las volumetrías requeridas (incluyendo 1,000,000 de registros en la tabla de transacciones de ventas).
 ![Evidencia Poblado de tablas](docs/Evidencia_poblado_tablas.png)
 
 1. **Bronze (Data Cruda):** Ingesta directa de las tablas transaccionales desde el origen SQL Server mediante pipeline sin transformaciones.
