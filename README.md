@@ -59,5 +59,6 @@ La arquitectura Medallion implementada, específicamente en la **Capa Gold**, fu
    * *Solución:* Integración de `FACT_DEVOLUCIONES` para identificar patrones de causa raíz por motivo, categoría, proveedor y canal.
 5. **Dashboard Ejecutivo Comercial:** 
    * *Solución:* Consolidación del Star Schema (Ventas + Dimensiones conformadas) listo para ser conectado en modo DirectLake / Import a Power BI, entregando la vista diaria por país, tienda, canal y categoría.
+   * Creacion de vistas que se pueden consultar directamente para facilitar acceso a la información desde las dif herramientas. 
 
 
