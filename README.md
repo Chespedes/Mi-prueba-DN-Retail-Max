@@ -64,5 +64,6 @@ La arquitectura Medallion implementada, específicamente en la **Capa Gold**, fu
    * Creacion de vista Del RFM junto la categorización de los Grupos de Valor **1.Champions, 2.Clientes Fieles, 3.En riesgo, 4.Abandono, 5.En desarrollo-clientes Ocasionales** (`Ver Vista_RFM`).
      ![Evidencia Vista RFM ](docs/Vista_RFM.png)
    * Creacion de vista de ventas Comerciales **Fecha, País, Tienda, etc ** (`Ver Vista_Ventas`).
+      ![Evidencia Vista RFM ](docs/Vista_Ventas.png)
 
 
