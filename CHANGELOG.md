@@ -9,7 +9,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0-2
 ### Añadido
 - Creación de la estructura base de infraestructura en la carpeta `/infra` (Terraform conceptual).
 - Implementación del pipeline de ingesta masiva en Fabric (`Ext_Sqlsrvr_Bronze`) para la capa Bronze utilizando control de cargas dinámico vía Lookup y ForEach.
-- Scripts DDL iniciales para la creación de las tablas transaccionales y maestras de origen en la carpeta `/sql`.
+- Scripts DDL iniciales para la creación de las tablas transaccionales y maestras de origen en la carpeta `/data-generation`.
 - Configuración de scripts de transformación para las capas Silver y Gold.
 - Documentación del linaje de datos y catálogo básico en la carpeta `/docs`.
 - Definición de políticas de seguridad, control de acceso por roles (Ingenieria, Analista, Admin) y enmascaramiento de datos sensibles.
